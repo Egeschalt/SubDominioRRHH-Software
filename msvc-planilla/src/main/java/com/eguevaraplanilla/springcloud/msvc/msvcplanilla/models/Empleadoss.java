@@ -1,6 +1,6 @@
 package com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models;
 
-public class Empleados {
+public class Empleadoss {
     private Long id;
     private String name;
     private String suranme;

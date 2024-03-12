@@ -1,19 +1,18 @@
 package com.eguevaraplanilla.springcloud.msvc.msvcplanilla.clients;
 
-import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.Empleados;
+
+import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.Empleadoss;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
-@FeignClient(name="mvsc-empleado", url="localhost:8001/api/empleado")
+@FeignClient(name="msvc-usuarios", url="localhost:8001/api/usuario")
 public interface PlanillaClientRest {
     @GetMapping("/{id}")
-    Empleados detalle(@PathVariable Long id);
+    Empleadoss detalle(@PathVariable Long id);
     @PostMapping()
-    Empleados crear(@RequestBody Empleados empleados);
-    @GetMapping("/empleado-por-Planilla")
-    List<Empleados> obtenerEmpleadosporPlanilla(@RequestParam Iterable<Long> ids);
-    @DeleteMapping("/eliminar-plaEmple/{id}")
-    void eliminarPlanillaEmpleadoPorId(@PathVariable Long id);
+    Empleadoss crear(@RequestBody Empleadoss empleados);
+
 }

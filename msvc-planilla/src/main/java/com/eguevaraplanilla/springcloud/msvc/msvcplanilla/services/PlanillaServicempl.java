@@ -1,24 +1,25 @@
 package com.eguevaraplanilla.springcloud.msvc.msvcplanilla.services;
 
 import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.clients.PlanillaClientRest;
-import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.Empleados;
+import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.Empleadoss;
 import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.entities.Planilla;
 import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.entities.PlanillaEmpleados;
 import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.repositories.PlanillaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class PlanillaServicempl implements PlanillaService{
     @Autowired
-    private PlanillaRepository repository;
-    @Autowired
     private PlanillaClientRest client;
+    @Autowired
+    private PlanillaRepository repository;
     @Override
     public List<Planilla> listar() {
         return (List<Planilla>) repository.findAll();
@@ -36,77 +37,57 @@ public class PlanillaServicempl implements PlanillaService{
 
     @Override
     public void eliminar(Long id) {
-        repository.deleteById(id);
-        client.eliminarPlanillaEmpleadoPorId(id);
-    }
+        repository.deleteById(id);}
 
     @Override
     @Transactional
-    public Optional<Empleados> asignarEmpleados(Empleados empleado, Long planillaId) {
-        Optional<Planilla> o=repository.findById(planillaId);
-        if (o.isPresent()){
-            Empleados empleadosMsvc=client.detalle(empleado.getId());
-            Planilla planilla=o.get();
-            PlanillaEmpleados planillaEmpleados=new PlanillaEmpleados();
-            planillaEmpleados.setEmpleadosId(empleadosMsvc.getId());
-
-            planilla.addPlanillaEmpleados((planillaEmpleados));
-            repository.save(planilla);
-            return  Optional.of(empleadosMsvc);
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    @Transactional
-    public Optional<Empleados> crearEmpleados(Empleados empleado, Long planillaId) {
+    public Optional<Empleadoss> asignarEmpleados(Empleadoss empleados, Long planillaId) {
         Optional<Planilla> o = repository.findById(planillaId);
         if(o.isPresent()){
-            Empleados empleadosNewMsvc = client.crear(empleado);
-            Planilla planilla = o.get();
-            PlanillaEmpleados planillaEmpleados = new PlanillaEmpleados();
-            planillaEmpleados.setEmpleadosId(empleadosNewMsvc.getId());
-            planilla.addPlanillaEmpleados(( planillaEmpleados));
-            repository.save(planilla);
-            return Optional.of(empleadosNewMsvc);
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    @Transactional
-    public Optional<Empleados> eliminarEmpleados(Empleados empleado, Long planillaId) {
-        Optional<Planilla> o = repository.findById(planillaId);
-        if(o.isPresent()){
-            Empleados empleadosMsvc = client.detalle(empleado.getId());
-            Planilla planilla = o.get();
+            Empleadoss empleadosMsvc = client.detalle(empleados.getId());
+            Planilla curso = o.get();
             PlanillaEmpleados planillaEmpleados = new PlanillaEmpleados();
             planillaEmpleados.setEmpleadosId(empleadosMsvc.getId());
-            planilla.removePlanillaEmpleados((planillaEmpleados));
-            repository.save(planilla);
+            curso.addPlanillaEmpleados((planillaEmpleados));
+            repository.save(curso);
             return Optional.of(empleadosMsvc);
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<Planilla> porIdConEmpleados(Long id) {
-        Optional<Planilla> o = repository.findById(id);
+    @Transactional
+    public Optional<Empleadoss> crearEmpleados(Empleadoss empleados, Long planillaId) {
+        Optional<Planilla> o = repository.findById(planillaId);
         if(o.isPresent()){
+            Empleadoss empleadosNewMsvc = client.crear(empleados);
             Planilla planilla = o.get();
-            if(!planilla.getListaplanillaEmpleados().isEmpty()){
-                List<Long> ids = planilla.getListaplanillaEmpleados().stream().map(cu -> cu.getEmpleadosId())
-                        .collect(Collectors.toList());
-                List<Empleados> empleados = client.obtenerEmpleadosporPlanilla(ids);
-                planilla.setEmpleados(empleados);
-            }
-            return Optional.of(planilla);
+            PlanillaEmpleados planillaEmpleados = new PlanillaEmpleados();
+            planillaEmpleados.setEmpleadosId(empleadosNewMsvc.getId());
+            planilla.addPlanillaEmpleados((planillaEmpleados));
+            repository.save(planilla);
+            return Optional.of(empleadosNewMsvc);
         }
         return Optional.empty();
+
     }
 
     @Override
-    public void eliminarPlanillaEmpleadoPorId(Long id) {
-        repository.eliminarPlanillaEmpleadoPorId(id);
+    @Transactional
+    public Optional<Empleadoss> eliminarEmpleados(Empleadoss empleados, Long planillaId) {
+        Optional<Planilla> o = repository.findById(planillaId);
+        if(o.isPresent()){
+            Empleadoss empleadosNewMsvc = client.detalle(empleados.getId());
+            Planilla planilla = o.get();
+            PlanillaEmpleados planillaEmpleados = new PlanillaEmpleados();
+            planillaEmpleados.setEmpleadosId(empleadosNewMsvc.getId());
+            planilla.removeCursoUsuario((planillaEmpleados));
+            repository.save(planilla);
+            return Optional.of(empleadosNewMsvc);
+        }
+        return Optional.empty();
+
     }
+
+
 }

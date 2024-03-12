@@ -1,21 +1,22 @@
 package com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.entities;
 
-import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.Empleados;
-import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.entities.PlanillaEmpleados;
+
+import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.Empleadoss;
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
+
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
-@Table(name = "Planilla")
+@Table(name = "Planillas")
 public class Planilla {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,19 +37,22 @@ public class Planilla {
     @DecimalMin(value = "0.0")
     private Double Ingresoimponible;//horas extra,gratifiaciones,rendimiento
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="horarios_id")
-    private List<PlanillaEmpleados> listaplanillaEmpleados;
+    @JoinColumn(name = "planilla_id")
+    private List<PlanillaEmpleados> planillaEmpleadosList;
     @Transient
-    private List<Empleados> empleados;
+    private List<Empleadoss> empleados;
+
     public Planilla() {
-        listaplanillaEmpleados = new ArrayList<>();
+        planillaEmpleadosList = new ArrayList<>();
         empleados = new ArrayList<>();
     }
-    public void addPlanillaEmpleados(PlanillaEmpleados planillaEmpleados){
-        listaplanillaEmpleados.add(planillaEmpleados);
+
+    public List<Empleadoss> getEmpleados() {
+        return empleados;
     }
-    public void removePlanillaEmpleados(PlanillaEmpleados planillaEmpleados){
-        listaplanillaEmpleados.remove(planillaEmpleados);
+
+    public void setEmpleados(List<Empleadoss> empleados) {
+        this.empleados = empleados;
     }
 
     public Long getId() {
@@ -102,19 +106,19 @@ public class Planilla {
         Ingresoimponible = ingresoimponible;
     }
 
-    public List<PlanillaEmpleados> getListaplanillaEmpleados() {
-        return listaplanillaEmpleados;
+
+    public void addPlanillaEmpleados(PlanillaEmpleados planillaEmpleados){
+        planillaEmpleadosList.add(planillaEmpleados);
+    }
+    public void removeCursoUsuario(PlanillaEmpleados planillaEmpleados){
+        planillaEmpleadosList.remove(planillaEmpleados);
     }
 
-    public void setListaplanillaEmpleados(List<PlanillaEmpleados> listaplanillaEmpleados) {
-        this.listaplanillaEmpleados = listaplanillaEmpleados;
+    public List<PlanillaEmpleados> getPlanillaEmpleadosList() {
+        return planillaEmpleadosList;
     }
 
-    public List<Empleados> getEmpleados() {
-        return empleados;
-    }
-
-    public void setEmpleados(List<Empleados> empleados) {
-        this.empleados = empleados;
+    public void setPlanillaEmpleadosList(List<PlanillaEmpleados> planillaEmpleadosList) {
+        this.planillaEmpleadosList = planillaEmpleadosList;
     }
 }
