@@ -45,4 +45,9 @@ public class EmpleadoServicempl implements EmpleadoService{
     public Optional<Empleado> porDni(String dni) {
         return repository.findByDni(dni);
     }
+
+    @Override
+    public List<Empleado> listarPorIds(Iterable<Long> ids) {
+        return (List<Empleado>) repository.findAllById(ids);
+    }
 }

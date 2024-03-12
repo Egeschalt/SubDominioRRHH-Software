@@ -1,5 +1,7 @@
-package com.eguevaraplanilla.springcloud.msvc.msvcplanilla.entities;
+package com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.entities;
 
+import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.Empleados;
+import com.eguevaraplanilla.springcloud.msvc.msvcplanilla.models.entities.PlanillaEmpleados;
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -8,7 +10,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Planilla")
@@ -31,6 +35,21 @@ public class Planilla {
     @NotNull
     @DecimalMin(value = "0.0")
     private Double Ingresoimponible;//horas extra,gratifiaciones,rendimiento
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="horarios_id")
+    private List<PlanillaEmpleados> listaplanillaEmpleados;
+    @Transient
+    private List<Empleados> empleados;
+    public Planilla() {
+        listaplanillaEmpleados = new ArrayList<>();
+        empleados = new ArrayList<>();
+    }
+    public void addPlanillaEmpleados(PlanillaEmpleados planillaEmpleados){
+        listaplanillaEmpleados.add(planillaEmpleados);
+    }
+    public void removePlanillaEmpleados(PlanillaEmpleados planillaEmpleados){
+        listaplanillaEmpleados.remove(planillaEmpleados);
+    }
 
     public Long getId() {
         return id;
@@ -81,5 +100,21 @@ public class Planilla {
 
     public void setIngresoimponible(Double ingresoimponible) {
         Ingresoimponible = ingresoimponible;
+    }
+
+    public List<PlanillaEmpleados> getListaplanillaEmpleados() {
+        return listaplanillaEmpleados;
+    }
+
+    public void setListaplanillaEmpleados(List<PlanillaEmpleados> listaplanillaEmpleados) {
+        this.listaplanillaEmpleados = listaplanillaEmpleados;
+    }
+
+    public List<Empleados> getEmpleados() {
+        return empleados;
+    }
+
+    public void setEmpleados(List<Empleados> empleados) {
+        this.empleados = empleados;
     }
 }

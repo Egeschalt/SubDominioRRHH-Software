@@ -12,4 +12,5 @@ public interface EmpleadoService {
     void eliminar(Long id);
     Optional<Empleado> porEmail(String email);
     Optional<Empleado> porDni(String dni);
+    List<Empleado> listarPorIds(Iterable<Long> ids);
 }

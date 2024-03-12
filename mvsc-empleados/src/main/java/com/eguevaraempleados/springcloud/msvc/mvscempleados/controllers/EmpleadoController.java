@@ -95,4 +95,9 @@ public class EmpleadoController {
         });
         return ResponseEntity.badRequest().body(errores);
     }
+    @GetMapping("/empleado-por-horario")
+    public ResponseEntity<?> obtenerEmpleadosporHorario(@RequestParam List<Long> ids){
+        return ResponseEntity.ok(service.listarPorIds(ids));
+    }
+
 }
